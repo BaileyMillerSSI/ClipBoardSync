@@ -26,6 +26,10 @@ namespace ClipboardClient
 
         static ClipBoardClient ClipboardSyncAgent = new ClipBoardClient();
 
+        Brush RedColor = Brushes.Red;
+        Brush GreenColor = Brushes.Green;
+        Brush YellowColor;
+
         static bool ContainsAudio
         {
             get
@@ -59,14 +63,46 @@ namespace ClipboardClient
         {
             InitializeComponent();
 
-            ClipboardSyncAgent.ConnectToServer();
+            YellowColor = new BrushConverter().ConvertFromString("#FFF0B234") as Brush;
+
 
             ClipboardSyncAgent.OnClipBoardBroadcastRecieved += OnClipBoardBroadcastRecieved;
+            ClipboardSyncAgent.OnConnectionStatusChanged += OnConnectionStatusChanged;
+
+            ClipboardSyncAgent.ConnectToServer();
+
+            
 
             ClipboardTicker = new DispatcherTimer(DispatcherPriority.Normal);
             ClipboardTicker.Interval = TimeSpan.FromMilliseconds(500);
             ClipboardTicker.Tick += ClipboardCheckTick;
             ClipboardTicker.Start();
+        }
+
+        private void OnConnectionStatusChanged(object source, Microsoft.AspNet.SignalR.Client.ConnectionState e)
+        {
+            if (e == Microsoft.AspNet.SignalR.Client.ConnectionState.Connected)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    StatusIndicator.Fill = GreenColor;
+                }), DispatcherPriority.Normal);
+            }
+            else if (e == Microsoft.AspNet.SignalR.Client.ConnectionState.Disconnected)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    StatusIndicator.Fill = RedColor;
+                }), DispatcherPriority.Normal);
+
+            }
+            else if (e == Microsoft.AspNet.SignalR.Client.ConnectionState.Reconnecting || e == Microsoft.AspNet.SignalR.Client.ConnectionState.Connecting)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    StatusIndicator.Fill = YellowColor;
+                }), DispatcherPriority.Normal);
+            }
         }
 
         private void OnClipBoardBroadcastRecieved(object source, ClipboardBroadcastRecievedArgs e)
@@ -144,7 +180,10 @@ namespace ClipboardClient
 
         private void StatusIndicator_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
+            if (e.HeightChanged)
+            {
+                (sender as Ellipse).Width = e.NewSize.Height;
+            }
         }
     }
 }

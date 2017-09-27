@@ -8,13 +8,14 @@ namespace ClipboardSyncAgent
 {
     public delegate void OnClipboardBroadcastRecieved(object source, ClipboardBroadcastRecievedArgs e);
     public delegate void OnClipboardErrorRecieved(object source, ClipboardErrorRecievedArgs e);
+    public delegate void OnConnectionStatusChanged(object source, ConnectionState e);
 
     public class ClipBoardClient
     {
 
         public event OnClipboardBroadcastRecieved OnClipBoardBroadcastRecieved;
         public event OnClipboardErrorRecieved OnClipBoardErrorRecieved;
-
+        public event OnConnectionStatusChanged OnConnectionStatusChanged;
 
         HubConnection hub;
         IHubProxy HubProxy;
@@ -27,6 +28,8 @@ namespace ClipboardSyncAgent
         public ClipBoardClient(string serverUrl = "http://localhost:9159/signalr", string hubName = "ClipboardHub")
         {
             hub = new HubConnection(serverUrl);
+
+            hub.StateChanged += Hub_StateChanged;
             
             HubProxy = hub.CreateHubProxy(hubName);
 
@@ -34,7 +37,12 @@ namespace ClipboardSyncAgent
             HubProxy.On<String>("ErrorRecieved", ErrorRecieved);
 
         }
-        
+
+        private void Hub_StateChanged(StateChange obj)
+        {
+            OnConnectionStatusChanged?.Invoke(this, obj.NewState);
+        }
+
         public async Task ConnectToServer()
         {
             await hub.Start();
