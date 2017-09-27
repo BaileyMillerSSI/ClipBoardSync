@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardClient", "ClipboardClient\ClipboardClient.csproj", "{A3F53A41-81FE-4722-A2BD-75EF8D2C11E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardSyncAgent", "ClipboardSyncAgent\ClipboardSyncAgent.csproj", "{7532E68B-5CE5-4661-8015-86342E928264}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardServer", "ClipboardServer\ClipboardServer.csproj", "{F6E02545-3AB6-45A5-8DCD-4B19629731D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{A3F53A41-81FE-4722-A2BD-75EF8D2C11E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3F53A41-81FE-4722-A2BD-75EF8D2C11E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3F53A41-81FE-4722-A2BD-75EF8D2C11E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7532E68B-5CE5-4661-8015-86342E928264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7532E68B-5CE5-4661-8015-86342E928264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7532E68B-5CE5-4661-8015-86342E928264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7532E68B-5CE5-4661-8015-86342E928264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6E02545-3AB6-45A5-8DCD-4B19629731D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6E02545-3AB6-45A5-8DCD-4B19629731D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6E02545-3AB6-45A5-8DCD-4B19629731D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6E02545-3AB6-45A5-8DCD-4B19629731D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

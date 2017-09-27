@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClipboardSyncAgent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ namespace ClipboardClient
     public partial class MainWindow : Window
     {
         static String PreviousClipboardContent = "";
+
+        static ClipBoardClient ClipboardSyncAgent = new ClipBoardClient();
 
         static bool ContainsAudio
         {
@@ -55,15 +58,21 @@ namespace ClipboardClient
         public MainWindow()
         {
             InitializeComponent();
-            
 
+            ClipboardSyncAgent.ConnectToServer();
+
+            ClipboardSyncAgent.OnClipBoardBroadcastRecieved += OnClipBoardBroadcastRecieved;
 
             ClipboardTicker = new DispatcherTimer(DispatcherPriority.Normal);
             ClipboardTicker.Interval = TimeSpan.FromMilliseconds(500);
             ClipboardTicker.Tick += ClipboardCheckTick;
             ClipboardTicker.Start();
         }
-        
+
+        private void OnClipBoardBroadcastRecieved(object source, ClipboardBroadcastRecievedArgs e)
+        {
+            SetClipboardText(e.NewClipboardText);
+        }
 
         private void ClipboardCheckTick(object sender, EventArgs e)
         {
@@ -88,14 +97,24 @@ namespace ClipboardClient
                     var canGetData = clipData.GetDataPresent("Text");
                     var isString = canGetData ? clipData.GetData("Text") is string : false;
                     var outString = isString ? clipData.GetData("Text").ToString() : "";
-                    
+
+                    if (PreviousClipboardContent != outString)
+                    {
+                        ClipboardSyncAgent.SendClipBoardToServer(outString);
+                    }
 
                     PreviousClipboardContent = outString;
 
                     ContentBlock.Text = $"Clipboard text = {outString}";
                 }
             }
-            else {
+            else
+            {
+                if (PreviousClipboardContent != String.Empty)
+                {
+                    ClipboardSyncAgent.SendClipBoardToServer(String.Empty);
+                }
+
                 PreviousClipboardContent = String.Empty;
                 ContentBlock.Text = $"Clipboard text is blank";
             }
@@ -121,6 +140,11 @@ namespace ClipboardClient
         {
             SetClipboardText("Hello World");
             GetClipboardContent();
+        }
+
+        private void StatusIndicator_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
         }
     }
 }
