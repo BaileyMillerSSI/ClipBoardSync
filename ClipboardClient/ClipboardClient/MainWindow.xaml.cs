@@ -21,7 +21,6 @@ namespace ClipboardClient
     /// </summary>
     public partial class MainWindow : Window
     {
-
         static String PreviousClipboardContent = "";
 
         static bool ContainsAudio
@@ -56,11 +55,15 @@ namespace ClipboardClient
         public MainWindow()
         {
             InitializeComponent();
+            
+
+
             ClipboardTicker = new DispatcherTimer(DispatcherPriority.Normal);
             ClipboardTicker.Interval = TimeSpan.FromMilliseconds(500);
             ClipboardTicker.Tick += ClipboardCheckTick;
             ClipboardTicker.Start();
         }
+        
 
         private void ClipboardCheckTick(object sender, EventArgs e)
         {
